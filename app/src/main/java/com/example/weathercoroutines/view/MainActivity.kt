@@ -2,6 +2,7 @@ package com.example.weathercoroutines.view
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -29,20 +30,28 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         viewModelFactory = MainActivityViewModelFactory(WeatherModel())
         viewModel = ViewModelProvider(this, viewModelFactory)[MainActivityViewModel::class.java]
-
-
-        viewModel.readWeather.observe(this, Observer {
-            binding.textViewCityName.text = it.cityName.toString()
-            binding.textViewDegrees.text = "${it.celsiusDegrees.toString()} °C"
-            binding.imageViewWeather.setImageBitmap(it.image)
-        })
-
+        observe()
         binding.apply {
             buttonSubmit.setOnClickListener {
+                progressCircular.visibility = View.VISIBLE
+                imageViewWeather.setImageDrawable(null)
                 getWeather()
             }
         }
 
+    }
+
+    private fun observe() {
+        viewModel.readWeather.observe(this, Observer {
+            binding.apply {
+
+                progressCircular.visibility = View.INVISIBLE
+                textViewCityName.text = it.cityName.toString()
+                textViewDegrees.text = "${it.celsiusDegrees.toString()} °C"
+                imageViewWeather.setImageBitmap(it.image)
+                binding.editTextCityInput.setText("")
+            }
+        })
     }
 
     private fun getWeather() {

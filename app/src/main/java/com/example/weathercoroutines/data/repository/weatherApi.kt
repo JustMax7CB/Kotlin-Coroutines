@@ -33,14 +33,20 @@ class WeatherApi {
             val imageURL =
                 "https:${currentWeatherJson.getJSONObject("condition").getString("icon")}"
             var image = BitmapFactory.decodeStream(java.net.URL(imageURL).openStream())
-            Log.d(TAG, "Celsius: $celsiusDegrees")
-            Log.d(TAG, "image url: $imageURL")
+          
             return WeatherModel(
                 cityName.replaceFirstChar { char -> char.uppercaseChar() },
                 Double.parseDouble(celsiusDegrees),
                 image
             )
         }
-        return WeatherModel()
+        return WeatherModel(
+            "Not Found",
+            0,
+            BitmapFactory.decodeStream(
+                java.net.URL("https://cdn.pixabay.com/photo/2017/02/12/21/29/false-2061131_1280.png")
+                    .openStream()
+            )
+        )
     }
 }

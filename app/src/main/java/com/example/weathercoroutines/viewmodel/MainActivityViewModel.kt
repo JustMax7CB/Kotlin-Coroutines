@@ -9,6 +9,7 @@ import com.example.weathercoroutines.data.repository.WeatherApi
 import com.example.weathercoroutines.model.WeatherModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivityViewModel(weatherData: WeatherModel) : ViewModel() {
@@ -29,6 +30,7 @@ class MainActivityViewModel(weatherData: WeatherModel) : ViewModel() {
         }
         viewModelScope.launch(Dispatchers.IO + handler) {
             Log.d(TAG, "Working on thread ${Thread.currentThread().name}")
+            delay(1000L)
             weatherData.postValue(api.weatherByCity(cityName))
         }
         Log.d(TAG, "Finished getWeatherByCity")
